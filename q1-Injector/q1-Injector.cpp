@@ -4,8 +4,10 @@
 #include "framework.h"
 #include "q1-Injector.h"
 
+#define ID_LIST 502
 #define MAX_LOADSTRING 100
 
+HWND hList;
 // Глобальные переменные:
 HINSTANCE hInst;                                // текущий экземпляр
 WCHAR szTitle[MAX_LOADSTRING];                  // Текст строки заголовка
@@ -106,10 +108,38 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
     case WM_COMMAND:
-        {
-           
-        }
-        break;
+    {
+
+		auto wmId = LOWORD(wParam);
+		auto wmEvent = HIWORD(wParam);
+
+		if (wmId) {
+			if (wmEvent == LBN_SELCHANGE || wmEvent == LBN_DBLCLK) {
+				int number = SendMessage(hList, LB_GETCURSEL, 0, wParam);
+				char name[100];
+				SendMessage(hList, LB_GETTEXT, (WPARAM)number, (LPARAM)name);
+			}
+		}
+    }
+    break;
+
+	case WM_CREATE:
+	{
+		hList = CreateWindow(L"listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD | LBS_NOTIFY,
+			30, 30, 200, 100, hWnd, (HMENU)ID_LIST, hInst, NULL);
+		
+		
+		
+		
+		SendMessage(hList, LB_ADDSTRING, 0, (LPARAM)L"Fisrt1");
+		SendMessage(hList, LB_ADDSTRING, 0, (LPARAM)L"Second2");
+
+
+		int number = SendMessage(hList, LB_GETCURSEL, 0, wParam);
+		// Перерисовываем список
+		InvalidateRect(hList, NULL, TRUE);
+	}
+	break;
     case WM_PAINT:
         {
             PAINTSTRUCT ps;
@@ -126,4 +156,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     return 0;
 }
+
+
 

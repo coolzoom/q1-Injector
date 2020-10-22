@@ -13,3 +13,6 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+#include <TlHelp32.h>
+#include <vector>
+#include <string>

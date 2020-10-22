@@ -152,11 +152,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
+    <ClInclude Include="MemoryFunc.h" />
     <ClInclude Include="q1-Injector.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="MemoryFunc.cpp" />
     <ClCompile Include="q1-Injector.cpp" />
   </ItemGroup>
   <ItemGroup>
