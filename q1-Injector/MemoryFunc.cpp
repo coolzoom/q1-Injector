@@ -1,8 +1,8 @@
 #include "MemoryFunc.h"
 
-std::vector<std::wstring> Memory::GetProcessessName()
+std::vector<char*> Memory::GetProcessessName()
 {
-	std::vector<std::wstring>processess;
+	std::vector<char*>processess;
 	
 	
 	return processess;

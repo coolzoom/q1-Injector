@@ -4,5 +4,5 @@
 
 
 namespace Memory {
-	std::vector <std::wstring> GetProcessessName();
+	std::vector <char*> GetProcessessName();
 }

@@ -125,14 +125,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	case WM_CREATE:
 	{
+		//Create listbox
 		hList = CreateWindow(L"listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD | LBS_NOTIFY,
 			30, 30, 200, 100, hWnd, (HMENU)ID_LIST, hInst, NULL);
 		
-		
-		
-		
-		SendMessage(hList, LB_ADDSTRING, 0, (LPARAM)L"Fisrt1");
-		SendMessage(hList, LB_ADDSTRING, 0, (LPARAM)L"Second2");
+		//get all processess
+		auto processess = Memory::GetProcessessName();
+		//write processess in listbox
+		for (auto process : processess)
+		{
+			SendMessage(hList, LB_ADDSTRING, 0, (LPARAM)process);
+		}
 
 
 		int number = SendMessage(hList, LB_GETCURSEL, 0, wParam);
