@@ -26,9 +26,8 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdL
 
 
 	RegisterClass(&wc);
-
 	HWND hwnd = CreateWindowEx(
-			NULL, wc.lpszClassName, L"q1 - Injector", 
+			NULL, wc.lpszClassName, windowParams.NameWindow.c_str(), 
 			WS_OVERLAPPEDWINDOW,
 			windowParams.postX, windowParams.postY, windowParams.width, windowParams.height,
 			NULL, nullptr, hInstance, NULL);
@@ -57,19 +56,72 @@ LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			//BUTTON
 			hButtonUpd = CreateWindow(L"button", L"UPDATE", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, (windowParams.width / 2) + 5, 0, (windowParams.width / 2) - 25, (windowParams.height / 3) - 20, hwnd, reinterpret_cast<HMENU>(ID_::ID_BUTTON_UPDATE), hInst, NULL);
-			hButtonSelect = CreateWindow(L"button", L"SELECT", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, (windowParams.width / 2) + 5, (windowParams.height / 3) - 20, (windowParams.width / 2) - 25, (windowParams.height / 3) - 20, hwnd, reinterpret_cast<HMENU>(ID_::ID_BUTTON_UPDATE), hInst, NULL);
-			hButtonInject = CreateWindow(L"button", L"INJECT", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, (windowParams.width / 2) + 5, ((windowParams.height / 3) - 20) + (windowParams.height / 3) - 20, (windowParams.width / 2) - 25, (windowParams.height / 3) - 20, hwnd, reinterpret_cast<HMENU>(ID_::ID_BUTTON_UPDATE), hInst, NULL);
-			//listbox
+			hButtonSelect = CreateWindow(L"button", L"SELECT", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, (windowParams.width / 2) + 5, (windowParams.height / 3) - 20, (windowParams.width / 2) - 25, (windowParams.height / 3) - 20, hwnd, reinterpret_cast<HMENU>(ID_::ID_BUTTON_SELECT_DLL), hInst, NULL);
+			hButtonInject = CreateWindow(L"button", L"INJECT", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, (windowParams.width / 2) + 5, ((windowParams.height / 3) - 20) + (windowParams.height / 3) - 20, (windowParams.width / 2) - 25, (windowParams.height / 3) - 20, hwnd, reinterpret_cast<HMENU>(ID_::ID_BUTTON_INJECT), hInst, NULL);
+			//LISTBOX
 			hList = CreateWindow(L"listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD, 0, 0, windowParams.width / 2, windowParams.height - 35, hwnd, reinterpret_cast<HMENU>(ID_::ID_LIST), hInst, NULL);
-			//text
+			//LABEL
 			CreateWindow(L"STATIC", L"x32", WS_VISIBLE | WS_CHILD, ((windowParams.width / 2) + 5), ((((windowParams.height / 3) - 20) + (windowParams.height / 3) - 20) + windowParams.height / 3) - 20, 25, 18, hwnd, reinterpret_cast<HMENU>(ID_::ID_TEXT_x32or64), hInst, NULL);
 			
+
 			auto processess = Memory::GetProcessessName();
-
-
 			for (auto process : processess)
 				SendMessage(hList, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(process.c_str()));
 
+		}
+		return 0;
+
+		case WM_COMMAND:
+		{
+			switch (LOWORD(wParam))
+			{
+				case ID_::ID_BUTTON_UPDATE:
+				{
+					SendMessage(hList, LB_RESETCONTENT, 0, 0);
+					auto processess = Memory::GetProcessessName();
+					for (auto process : processess)
+						SendMessage(hList, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(process.c_str()));
+				}
+				break;
+			
+				case ID_::ID_BUTTON_SELECT_DLL:
+				{
+					//Memory::GetPathToDll();
+					OPENFILENAME ofn;       // common dialog box structure
+					wchar_t szFile[260];       // buffer for file name
+
+					// Initialize OPENFILENAME
+					ZeroMemory(&ofn, sizeof(ofn));
+					ofn.lStructSize = sizeof(ofn);
+					ofn.hwndOwner = NULL;
+					ofn.lpstrFile = szFile;
+					// Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
+					// use the contents of szFile to initialize itself.
+					ofn.lpstrFile[0] = '\0';
+					ofn.nMaxFile = sizeof(szFile);
+					ofn.lpstrFilter = L".dll";
+					ofn.nFilterIndex = 1;
+					ofn.lpstrFileTitle = NULL;
+					ofn.nMaxFileTitle = 0;
+					ofn.lpstrInitialDir = NULL;
+					ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+					// Display the Open dialog box. 
+
+					if (GetOpenFileName(&ofn) == TRUE)
+					{
+
+					}
+				}
+				break;
+
+				case ID_::ID_BUTTON_INJECT:
+				{
+					MessageBox(NULL, L"3", L"3", MB_ICONINFORMATION);
+				}
+				break;
+			}
+			return 0;
 		}
 		return 0;
 		case WM_DESTROY:

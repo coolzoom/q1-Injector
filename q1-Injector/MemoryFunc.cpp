@@ -21,3 +21,9 @@ std::vector<std::wstring> Memory::GetProcessessName()
 	CloseHandle(hSnapshot);
 	return processess;
 }
+
+std::wstring Memory::GetPathToDll()
+{
+
+	return std::wstring();
+}
