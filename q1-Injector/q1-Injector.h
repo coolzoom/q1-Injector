@@ -17,3 +17,10 @@ enum ID_ {
 	ID_LIST,
 	ID_BUTTON
 };
+
+struct MainWindow {
+	int width = 300;
+	int height = 350;
+	int postX = 0;
+	int postY = 0;
+};

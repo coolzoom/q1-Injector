@@ -1,9 +1,9 @@
 #include "MemoryFunc.h"
 #include "q1-Injector.h"
 
-std::vector<char*> Memory::GetProcessessName()
+std::vector<std::wstring> Memory::GetProcessessName()
 {
-	std::vector<char*>processess;
+	std::vector<std::wstring>processess;
 	
 	PROCESSENTRY32 pe32{ sizeof(PROCESSENTRY32) };
 
@@ -12,11 +12,11 @@ std::vector<char*> Memory::GetProcessessName()
 	{
 		do
 		{
-			//pe32.szExeFile, pe32.th32ProcessID
+			processess.push_back(pe32.szExeFile);
 			
 		} while (Process32Next(hSnapshot, &pe32));
 	}
-	///////
+
 
 	CloseHandle(hSnapshot);
 	return processess;

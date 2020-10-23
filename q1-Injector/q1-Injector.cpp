@@ -1,8 +1,13 @@
 ﻿#include "q1-Injector.h"
+#include "MemoryFunc.h"
+
+HWND hList;
+HINSTANCE hInst;
+MainWindow windowParams;
 
 int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow) {
 
-
+	hInst = hInstance;
 	MSG msg = { };
 	WNDCLASS wc = { };
 	wc.cbClsExtra = 0;
@@ -20,10 +25,10 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdL
 	RegisterClass(&wc);
 
 	HWND hwnd = CreateWindowEx(
-				NULL, wc.lpszClassName, L"q1 - Injector", 
-				WS_OVERLAPPEDWINDOW,
-				0, 0, 250, 350, 
-				NULL, nullptr, hInstance, NULL);
+			NULL, wc.lpszClassName, L"q1 - Injector", 
+			WS_OVERLAPPEDWINDOW,
+			windowParams.postX, windowParams.postY, windowParams.width, windowParams.height,
+			NULL, nullptr, hInstance, NULL);
 
 	if (hwnd == NULL)
 	{
@@ -45,16 +50,20 @@ LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_CREATE:
-	{
-		HWND hList = CreateWindow(L"listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD | LBS_NOTIFY,
-			30, 30, 200, 100, hWnd, (HMENU)ID_LIST, hInst, NULL);
+		case WM_CREATE:
+		{
+			hList = CreateWindow(L"listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD, 0, 0, windowParams.width / 2, windowParams.height - 35, hwnd, reinterpret_cast<HMENU>(ID_::ID_LIST), hInst, NULL);
+			auto processess = Memory::GetProcessessName();
 
-	}
-	return 0;
-	case WM_DESTROY:
-		PostQuitMessage(0);
+
+			for (auto process : processess)
+				SendMessage(hList, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(process.c_str()));
+
+		}
 		return 0;
-	}
-	return DefWindowProc(hwnd, uMsg, wParam, lParam);
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			return 0;
+		}
+		return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }

@@ -4,5 +4,5 @@
 #include <Windows.h>
 
 namespace Memory {
-	std::vector <char*> GetProcessessName();
+	std::vector <std::wstring> GetProcessessName();
 }
