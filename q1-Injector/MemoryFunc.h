@@ -5,7 +5,13 @@
 
 namespace Memory {
 	std::vector <std::wstring> GetProcessessName();
-
-	std::wstring GetPathToDll();
 	BOOL Inject(std::wstring pathToDll);
+}
+
+
+
+namespace Q1 {
+	std::wstring GetPathToDll();
+	wchar_t* GetSelectedProcess(HWND hList);
+
 }

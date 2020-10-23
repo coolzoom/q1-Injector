@@ -22,8 +22,20 @@ std::vector<std::wstring> Memory::GetProcessessName()
 	return processess;
 }
 
-std::wstring Memory::GetPathToDll()
+std::wstring Q1::GetPathToDll()
 {
 
 	return std::wstring();
+}
+
+wchar_t* Q1::GetSelectedProcess(HWND hList)
+{
+	auto i = SendMessage(hList, LB_GETCURSEL, 0, 0);
+	if (i != LB_ERR)
+	{
+		wchar_t Temp[_MAX_DIR];
+		SendMessage(hList, LB_GETTEXT, i, (LPARAM)Temp);
+		return Temp;
+	}
+	return 0;
 }

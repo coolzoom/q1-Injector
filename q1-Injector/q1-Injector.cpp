@@ -75,6 +75,7 @@ LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			switch (LOWORD(wParam))
 			{
+
 				case ID_::ID_BUTTON_UPDATE:
 				{
 					SendMessage(hList, LB_RESETCONTENT, 0, 0);
@@ -117,7 +118,14 @@ LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 				case ID_::ID_BUTTON_INJECT:
 				{
-					MessageBox(NULL, L"3", L"3", MB_ICONINFORMATION);
+					wchar_t* selectedProcess = Q1::GetSelectedProcess(hList);
+					if (selectedProcess == nullptr)
+					{
+						MessageBox(NULL, L"No process selected", L"Error", MB_ICONERROR);
+						break;
+					}
+
+
 				}
 				break;
 			}
