@@ -15,7 +15,10 @@ LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 enum ID_ {
 	ID_LIST,
-	ID_BUTTON
+	ID_BUTTON_UPDATE,
+	ID_BUTTON_SELECT_DLL,
+	ID_BUTTON_INJECT,
+	ID_TEXT_x32or64
 };
 
 struct MainWindow {

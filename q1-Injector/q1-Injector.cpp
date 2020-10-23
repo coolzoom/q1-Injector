@@ -2,6 +2,9 @@
 #include "MemoryFunc.h"
 
 HWND hList;
+HWND hButtonUpd;
+HWND hButtonInject;
+HWND hButtonSelect;
 HINSTANCE hInst;
 MainWindow windowParams;
 
@@ -52,7 +55,15 @@ LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		case WM_CREATE:
 		{
+			//BUTTON
+			hButtonUpd = CreateWindow(L"button", L"UPDATE", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, (windowParams.width / 2) + 5, 0, (windowParams.width / 2) - 25, (windowParams.height / 3) - 20, hwnd, reinterpret_cast<HMENU>(ID_::ID_BUTTON_UPDATE), hInst, NULL);
+			hButtonSelect = CreateWindow(L"button", L"SELECT", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, (windowParams.width / 2) + 5, (windowParams.height / 3) - 20, (windowParams.width / 2) - 25, (windowParams.height / 3) - 20, hwnd, reinterpret_cast<HMENU>(ID_::ID_BUTTON_UPDATE), hInst, NULL);
+			hButtonInject = CreateWindow(L"button", L"INJECT", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, (windowParams.width / 2) + 5, ((windowParams.height / 3) - 20) + (windowParams.height / 3) - 20, (windowParams.width / 2) - 25, (windowParams.height / 3) - 20, hwnd, reinterpret_cast<HMENU>(ID_::ID_BUTTON_UPDATE), hInst, NULL);
+			//listbox
 			hList = CreateWindow(L"listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD, 0, 0, windowParams.width / 2, windowParams.height - 35, hwnd, reinterpret_cast<HMENU>(ID_::ID_LIST), hInst, NULL);
+			//text
+			CreateWindow(L"STATIC", L"x32", WS_VISIBLE | WS_CHILD, ((windowParams.width / 2) + 5), ((((windowParams.height / 3) - 20) + (windowParams.height / 3) - 20) + windowParams.height / 3) - 20, 25, 18, hwnd, reinterpret_cast<HMENU>(ID_::ID_TEXT_x32or64), hInst, NULL);
+			
 			auto processess = Memory::GetProcessessName();
 
 
