@@ -151,22 +151,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h" />
     <ClInclude Include="MemoryFunc.h" />
     <ClInclude Include="q1-Injector.h" />
-    <ClInclude Include="Resource.h" />
-    <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MemoryFunc.cpp" />
     <ClCompile Include="q1-Injector.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="q1-Injector.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="q1-Injector.ico" />
-    <Image Include="small.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

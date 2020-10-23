@@ -15,15 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="q1-Injector.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
@@ -38,18 +29,5 @@
     <ClCompile Include="MemoryFunc.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="q1-Injector.rc">
-      <Filter>Файлы ресурсов</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="small.ico">
-      <Filter>Файлы ресурсов</Filter>
-    </Image>
-    <Image Include="q1-Injector.ico">
-      <Filter>Файлы ресурсов</Filter>
-    </Image>
   </ItemGroup>
 </Project>

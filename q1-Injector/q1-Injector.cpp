@@ -1,164 +1,60 @@
-﻿// q1-Injector.cpp : Определяет точку входа для приложения.
-//
+﻿#include "q1-Injector.h"
 
-#include "framework.h"
-#include "q1-Injector.h"
+int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow) {
 
-#define ID_LIST 502
-#define MAX_LOADSTRING 100
 
-HWND hList;
-// Глобальные переменные:
-HINSTANCE hInst;                                // текущий экземпляр
-WCHAR szTitle[MAX_LOADSTRING];                  // Текст строки заголовка
-WCHAR szWindowClass[MAX_LOADSTRING];            // имя класса главного окна
+	MSG msg = { };
+	WNDCLASS wc = { };
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+	wc.hbrBackground = reinterpret_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
+	wc.hCursor = LoadCursor(hInstance, MAKEINTRESOURCE(230));
+	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+	wc.hInstance = hInstance;
+	wc.lpfnWndProc = WindowProc;
+	wc.lpszClassName = L"q1_Injector";
+	wc.lpszMenuName = nullptr;
+	wc.style = CS_HREDRAW | CS_VREDRAW;
 
-// Отправить объявления функций, включенных в этот модуль кода:
-ATOM                MyRegisterClass(HINSTANCE hInstance);
-BOOL                InitInstance(HINSTANCE, int);
-LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
-{
-    UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
+	RegisterClass(&wc);
 
-    // TODO: Разместите код здесь.
+	HWND hwnd = CreateWindowEx(
+				NULL, wc.lpszClassName, L"q1 - Injector", 
+				WS_OVERLAPPEDWINDOW,
+				0, 0, 250, 350, 
+				NULL, nullptr, hInstance, NULL);
 
-    // Инициализация глобальных строк
-    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_Q1INJECTOR, szWindowClass, MAX_LOADSTRING);
-    MyRegisterClass(hInstance);
+	if (hwnd == NULL)
+	{
+		return 0;
+	}
 
-    // Выполнить инициализацию приложения:
-    if (!InitInstance (hInstance, nCmdShow))
-    {
-        return FALSE;
-    }
+	ShowWindow(hwnd, nCmdShow);
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_Q1INJECTOR));
+	while (GetMessage(&msg, NULL, 0, 0))
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
 
-    MSG msg;
-
-    // Цикл основного сообщения:
-    while (GetMessage(&msg, nullptr, 0, 0))
-    {
-        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-    }
-
-    return (int) msg.wParam;
+	return 0;
 }
 
-
-
-//
-//  ФУНКЦИЯ: MyRegisterClass()
-//
-//  ЦЕЛЬ: Регистрирует класс окна.
-//
-ATOM MyRegisterClass(HINSTANCE hInstance)
+LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    WNDCLASSEXW wcex;
-
-    wcex.cbSize = sizeof(WNDCLASSEX);
-
-    wcex.style          = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc    = WndProc;
-    wcex.cbClsExtra     = 0;
-    wcex.cbWndExtra     = 0;
-    wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_Q1INJECTOR));
-    wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_Q1INJECTOR);
-    wcex.lpszClassName  = szWindowClass;
-    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
-
-    return RegisterClassExW(&wcex);
-}
-
-
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
-{
-   hInst = hInstance; // Сохранить маркер экземпляра в глобальной переменной
-
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, 350, 250, nullptr, nullptr, hInstance, nullptr);
-
-   if (!hWnd)
-   {
-      return FALSE;
-   }
-
-   ShowWindow(hWnd, nCmdShow);
-   UpdateWindow(hWnd);
-
-   return TRUE;
-}
-
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    switch (message)
-    {
-    case WM_COMMAND:
-    {
-
-		auto wmId = LOWORD(wParam);
-		auto wmEvent = HIWORD(wParam);
-
-		if (wmId) {
-			if (wmEvent == LBN_SELCHANGE || wmEvent == LBN_DBLCLK) {
-				int number = SendMessage(hList, LB_GETCURSEL, 0, wParam);
-				char name[100];
-				SendMessage(hList, LB_GETTEXT, (WPARAM)number, (LPARAM)name);
-			}
-		}
-    }
-    break;
-
+	switch (uMsg)
+	{
 	case WM_CREATE:
 	{
-		//Create listbox
-		hList = CreateWindow(L"listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD | LBS_NOTIFY,
+		HWND hList = CreateWindow(L"listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD | LBS_NOTIFY,
 			30, 30, 200, 100, hWnd, (HMENU)ID_LIST, hInst, NULL);
-		
-		//get all processess
-		auto processess = Memory::GetProcessessName();
-		//write processess in listbox
-		for (auto process : processess)
-		{
-			SendMessage(hList, LB_ADDSTRING, 0, (LPARAM)process);
-		}
 
-
-		int number = SendMessage(hList, LB_GETCURSEL, 0, wParam);
-		// Перерисовываем список
-		InvalidateRect(hList, NULL, TRUE);
 	}
-	break;
-    case WM_PAINT:
-        {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: Добавьте сюда любой код прорисовки, использующий HDC...
-            EndPaint(hWnd, &ps);
-        }
-        break;
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        break;
-    default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
-    }
-    return 0;
+	return 0;
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		return 0;
+	}
+	return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
-
-
-
