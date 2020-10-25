@@ -9,6 +9,9 @@ HINSTANCE hInst;
 MainWindow windowParams;
 wchar_t* pathToDll = 0;
 
+std::vector<std::wstring>processess;
+std::vector<int>pIDS;
+
 int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow) {
 
 	hInst = hInstance;
@@ -65,10 +68,14 @@ LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			CreateWindow(L"STATIC", L"x32", WS_VISIBLE | WS_CHILD, ((windowParams.width / 2) + 5), ((((windowParams.height / 3) - 20) + (windowParams.height / 3) - 20) + windowParams.height / 3) - 20, 25, 18, hwnd, reinterpret_cast<HMENU>(ID_::ID_TEXT_x32or64), hInst, NULL);
 			
 
-			auto processess = Memory::GetProcessessName();
+			Memory::GetProcessessNameAndPID(processess, pIDS);
+			int index = 0;
 			for (auto process : processess)
-				SendMessage(hList, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(process.c_str()));
-
+			{
+				std::wstring processAndPid = (std::wstring)(L"[") + std::to_wstring(pIDS[index]) + (std::wstring)(L"]") + processess[index];
+				SendMessage(hList, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(processAndPid.c_str()));
+				index++;
+			}
 		}
 		return 0;
 
@@ -79,10 +86,21 @@ LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 				case ID_::ID_BUTTON_UPDATE:
 				{
+					
+					ZeroMemory(&processess, sizeof(std::vector<std::wstring>));
+					ZeroMemory(&pIDS, sizeof(std::vector<int>));
+
 					SendMessage(hList, LB_RESETCONTENT, 0, 0);
-					auto processess = Memory::GetProcessessName();
+					Memory::GetProcessessNameAndPID(processess, pIDS);
+					
+					int index = 0;
 					for (auto process : processess)
-						SendMessage(hList, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(process.c_str()));
+					{
+						std::wstring processAndPid = (std::wstring)(L"[") + std::to_wstring(pIDS[index]) + (std::wstring)(L"]") + processess[index];
+						SendMessage(hList, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(processAndPid.c_str()));
+						index++;
+					}
+						
 				}
 				break;
 			

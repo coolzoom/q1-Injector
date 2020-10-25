@@ -3,8 +3,9 @@
 #include <vector>
 #include <Windows.h>
 
+
 namespace Memory {
-	std::vector <std::wstring> GetProcessessName();
+	BOOL GetProcessessNameAndPID(std::vector<std::wstring>&processess, std::vector<int>&pIDS);
 	BOOL Inject(wchar_t* pathToDll);
 }
 

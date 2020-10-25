@@ -23,7 +23,7 @@ enum ID_ {
 
 struct MainWindow {
 	std::wstring NameWindow = L"q1 - Injector";
-	int width = 300;
+	int width = 400;
 	int height = 350;
 	int postX = 0;
 	int postY = 0;

@@ -1,29 +1,30 @@
 #include "MemoryFunc.h"
 #include "q1-Injector.h"
 
-std::vector<std::wstring> Memory::GetProcessessName()
+BOOL Memory::GetProcessessNameAndPID(std::vector<std::wstring>&processess, std::vector<int>&pIDS)
 {
-	std::vector<std::wstring>processess;
+
 	
 	PROCESSENTRY32 pe32{ sizeof(PROCESSENTRY32) };
+
 	HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
 	if (Process32First(hSnapshot, &pe32))
 	{
 		do
 		{
 			processess.push_back(pe32.szExeFile);
-			
+			pIDS.push_back(pe32.th32ProcessID);
 		} while (Process32Next(hSnapshot, &pe32));
 	}
 
+	
 
 	CloseHandle(hSnapshot);
-	return processess;
+	return true;
 }
 
-BOOL Memory::Inject(wchar_t* pathToDll)
+BOOL Memory::Inject(wchar_t * pathToDll)
 {
-
 	return 0;
 }
 
