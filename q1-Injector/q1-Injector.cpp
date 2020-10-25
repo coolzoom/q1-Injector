@@ -7,6 +7,7 @@ HWND hButtonInject;
 HWND hButtonSelect;
 HINSTANCE hInst;
 MainWindow windowParams;
+wchar_t* pathToDll = 0;
 
 int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow) {
 
@@ -87,32 +88,7 @@ LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			
 				case ID_::ID_BUTTON_SELECT_DLL:
 				{
-					//Memory::GetPathToDll();
-					OPENFILENAME ofn;       // common dialog box structure
-					wchar_t szFile[260];       // buffer for file name
-
-					// Initialize OPENFILENAME
-					ZeroMemory(&ofn, sizeof(ofn));
-					ofn.lStructSize = sizeof(ofn);
-					ofn.hwndOwner = NULL;
-					ofn.lpstrFile = szFile;
-					// Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
-					// use the contents of szFile to initialize itself.
-					ofn.lpstrFile[0] = '\0';
-					ofn.nMaxFile = sizeof(szFile);
-					ofn.lpstrFilter = L".dll";
-					ofn.nFilterIndex = 1;
-					ofn.lpstrFileTitle = NULL;
-					ofn.nMaxFileTitle = 0;
-					ofn.lpstrInitialDir = NULL;
-					ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-
-					// Display the Open dialog box. 
-
-					if (GetOpenFileName(&ofn) == TRUE)
-					{
-
-					}
+					pathToDll = Q1::GetPathToDll();
 				}
 				break;
 
@@ -125,6 +101,17 @@ LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 						break;
 					}
 
+					if (pathToDll == nullptr)
+					{
+						MessageBox(NULL, L"Dll not selected", L"Error", MB_ICONERROR);
+						break;
+					}
+
+					if (!Memory::Inject(pathToDll)) 
+					{
+						MessageBox(NULL, L"Dll was not injected", L"Error", MB_ICONERROR);
+						break;
+					}
 
 				}
 				break;

@@ -6,7 +6,6 @@ std::vector<std::wstring> Memory::GetProcessessName()
 	std::vector<std::wstring>processess;
 	
 	PROCESSENTRY32 pe32{ sizeof(PROCESSENTRY32) };
-
 	HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
 	if (Process32First(hSnapshot, &pe32))
 	{
@@ -22,10 +21,38 @@ std::vector<std::wstring> Memory::GetProcessessName()
 	return processess;
 }
 
-std::wstring Q1::GetPathToDll()
+BOOL Memory::Inject(wchar_t* pathToDll)
 {
 
-	return std::wstring();
+	return 0;
+}
+
+wchar_t* Q1::GetPathToDll()
+{
+	OPENFILENAME ofn;
+	wchar_t szFile[_MAX_PATH];
+
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = NULL;
+	ofn.lpstrFile = szFile;
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(szFile);
+	ofn.lpstrFilter = L".dll";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+	// Display the Open dialog box. 
+
+	if (GetOpenFileName(&ofn) == TRUE)
+	{
+		return szFile;
+	}
+	return 0;
+	
 }
 
 wchar_t* Q1::GetSelectedProcess(HWND hList)
