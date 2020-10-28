@@ -69,7 +69,7 @@ LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			
 
 			Memory::GetProcessessNameAndPID(processess, pIDS);
-			int index = 0;
+			unsigned int index = 0;
 			for (auto process : processess)
 			{
 				std::wstring processAndPid = (std::wstring)(L"[") + std::to_wstring(pIDS[index]) + (std::wstring)(L"]") + processess[index];
@@ -89,11 +89,10 @@ LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					
 					ZeroMemory(&processess, sizeof(std::vector<std::wstring>));
 					ZeroMemory(&pIDS, sizeof(std::vector<int>));
-
 					SendMessage(hList, LB_RESETCONTENT, 0, 0);
 					Memory::GetProcessessNameAndPID(processess, pIDS);
 					
-					int index = 0;
+					unsigned int index = 0;
 					for (auto process : processess)
 					{
 						std::wstring processAndPid = (std::wstring)(L"[") + std::to_wstring(pIDS[index]) + (std::wstring)(L"]") + processess[index];
@@ -112,8 +111,8 @@ LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 				case ID_::ID_BUTTON_INJECT:
 				{
-					wchar_t* selectedProcess = Q1::GetSelectedProcess(hList);
-					if (selectedProcess == nullptr)
+					int pID = Q1::GetSelectedProcessAndPID(hList, processess, pIDS);
+					if (pID == 0)
 					{
 						MessageBox(NULL, L"No process selected", L"Error", MB_ICONERROR);
 						break;
@@ -125,7 +124,7 @@ LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 						break;
 					}
 
-					if (!Memory::Inject(pathToDll)) 
+					if (!Memory::Inject(pathToDll, pID)) 
 					{
 						MessageBox(NULL, L"Dll was not injected", L"Error", MB_ICONERROR);
 						break;

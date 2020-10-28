@@ -1,10 +1,10 @@
 #include "MemoryFunc.h"
 #include "q1-Injector.h"
 
+
+
 BOOL Memory::GetProcessessNameAndPID(std::vector<std::wstring>&processess, std::vector<int>&pIDS)
 {
-
-	
 	PROCESSENTRY32 pe32{ sizeof(PROCESSENTRY32) };
 
 	HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
@@ -17,15 +17,16 @@ BOOL Memory::GetProcessessNameAndPID(std::vector<std::wstring>&processess, std::
 		} while (Process32Next(hSnapshot, &pe32));
 	}
 
-	
-
 	CloseHandle(hSnapshot);
 	return true;
 }
 
-BOOL Memory::Inject(wchar_t * pathToDll)
+BOOL Memory::Inject(wchar_t * pathToDll, int pID)
 {
-	return 0;
+
+	
+	///////////////////////////////
+	return FALSE;
 }
 
 wchar_t* Q1::GetPathToDll()
@@ -39,14 +40,12 @@ wchar_t* Q1::GetPathToDll()
 	ofn.lpstrFile = szFile;
 	ofn.lpstrFile[0] = '\0';
 	ofn.nMaxFile = sizeof(szFile);
-	ofn.lpstrFilter = L".dll";
+	ofn.lpstrFilter = L"Dll files(*.dll)\0*.dll";
 	ofn.nFilterIndex = 1;
 	ofn.lpstrFileTitle = NULL;
 	ofn.nMaxFileTitle = 0;
 	ofn.lpstrInitialDir = NULL;
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-
-	// Display the Open dialog box. 
 
 	if (GetOpenFileName(&ofn) == TRUE)
 	{
@@ -56,14 +55,22 @@ wchar_t* Q1::GetPathToDll()
 	
 }
 
-wchar_t* Q1::GetSelectedProcess(HWND hList)
+int Q1::GetSelectedProcessAndPID(HWND hList, std::vector<std::wstring> &processess, std::vector<int>& pIDS)
 {
 	auto i = SendMessage(hList, LB_GETCURSEL, 0, 0);
 	if (i != LB_ERR)
 	{
 		wchar_t Temp[_MAX_DIR];
 		SendMessage(hList, LB_GETTEXT, i, (LPARAM)Temp);
-		return Temp;
+
+		unsigned int index = 0;
+		for (auto process : processess)
+		{
+			std::wstring processAndPid = (std::wstring)(L"[") + std::to_wstring(pIDS[index]) + (std::wstring)(L"]") + processess[index];
+
+			if (wcscmp(processAndPid.c_str(), Temp) == 0) return pIDS[index]; //think about compare here
+			index++;
+		}
 	}
 	return 0;
 }
