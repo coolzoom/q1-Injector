@@ -21,15 +21,31 @@ BOOL Memory::GetProcessessNameAndPID(std::vector<std::wstring>&processess, std::
 	return true;
 }
 
-BOOL Memory::Inject(wchar_t * pathToDll, int pID)
+BOOL Memory::Inject(std::wstring dllPath, int pID)
 {
+	HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, pID);
+	if (!hProcess)
+		return FALSE;
 
-	
-	///////////////////////////////
-	return FALSE;
+	MessageBox(NULL, dllPath.c_str(), dllPath.c_str(), MB_ICONINFORMATION);
+	LPVOID mem_allocation = VirtualAllocEx(hProcess, NULL, dllPath.size() + 1, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+	if (!mem_allocation)
+		return FALSE;
+
+	if (WriteProcessMemory(hProcess, mem_allocation, dllPath.c_str(), dllPath.size() * 2, 0) <= 0)
+		return FALSE;
+
+	DWORD dummy;
+	HANDLE RemThread = CreateRemoteThread(hProcess, NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(GetProcAddress(LoadLibrary(L"kernel32"), "LoadLibraryW")), mem_allocation, 0, &dummy);
+
+	if (!RemThread) return FALSE;
+
+	CloseHandle(RemThread);
+	CloseHandle(hProcess);
+	return true;
 }
 
-wchar_t* Q1::GetPathToDll()
+BOOL Q1::GetPathToDll(std::wstring &pathToDll)
 {
 	OPENFILENAME ofn;
 	wchar_t szFile[_MAX_PATH];
@@ -49,9 +65,10 @@ wchar_t* Q1::GetPathToDll()
 
 	if (GetOpenFileName(&ofn) == TRUE)
 	{
-		return szFile;
+		pathToDll = szFile;
+		return 	TRUE;
 	}
-	return 0;
+	return FALSE;
 	
 }
 
@@ -67,8 +84,9 @@ int Q1::GetSelectedProcessAndPID(HWND hList, std::vector<std::wstring> &processe
 		for (auto process : processess)
 		{
 			std::wstring processAndPid = (std::wstring)(L"[") + std::to_wstring(pIDS[index]) + (std::wstring)(L"]") + processess[index];
+			std::wstring ws(Temp);
 
-			if (wcscmp(processAndPid.c_str(), Temp) == 0) return pIDS[index]; //think about compare here
+			if (wcscmp(processAndPid.c_str(), Temp) == 0) return pIDS[index];
 			index++;
 		}
 	}

@@ -7,7 +7,8 @@ HWND hButtonInject;
 HWND hButtonSelect;
 HINSTANCE hInst;
 MainWindow windowParams;
-wchar_t* pathToDll = 0;
+std::wstring pathToDll;
+BOOL pathToDllResult = FALSE;
 
 std::vector<std::wstring>processess;
 std::vector<int>pIDS;
@@ -105,7 +106,7 @@ LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			
 				case ID_::ID_BUTTON_SELECT_DLL:
 				{
-					pathToDll = Q1::GetPathToDll();
+					pathToDllResult = Q1::GetPathToDll(pathToDll);
 				}
 				break;
 
@@ -118,7 +119,7 @@ LRESULT __stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 						break;
 					}
 
-					if (pathToDll == nullptr)
+					if (!pathToDllResult)
 					{
 						MessageBox(NULL, L"Dll not selected", L"Error", MB_ICONERROR);
 						break;
