@@ -27,7 +27,6 @@ BOOL Memory::Inject(std::wstring dllPath, int pID)
 	if (!hProcess)
 		return FALSE;
 
-	MessageBox(NULL, dllPath.c_str(), dllPath.c_str(), MB_ICONINFORMATION);
 	LPVOID mem_allocation = VirtualAllocEx(hProcess, NULL, dllPath.size() + 1, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
 	if (!mem_allocation)
 		return FALSE;
